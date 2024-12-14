@@ -2,7 +2,7 @@
 
 ## Environment Setup
 
-1. Windows system
+1. Windows/Ubuntu
 2. Python
 3. Tk
 
