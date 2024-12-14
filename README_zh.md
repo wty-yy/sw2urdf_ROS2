@@ -11,10 +11,12 @@
 1. 目录版
 
 运行dir_ros2.py选择sw2urdf生成的目录，自动生成。
+不可以在ubuntu上运行
 
 2. zip版
 
 把sw2urdf生成的目录压缩为zip，运行zip_ros2.py选择zip文件，自动生成。（推荐，防止原文件被破环）
+可以在ubuntu上运行
 
 ## 运行测试
 
