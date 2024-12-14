@@ -23,3 +23,9 @@ Place the generated directory in the `src` directory of your ROS2 workspace, the
 Run the **display.launch.py** launch file.
 
 > Note: The `arm_description` directory is the test target.
+
+Note：
+**fix_frame** select **base_link**
+
+**Description Topic** select **/robot_description**
+![alt text](assets/image.png)

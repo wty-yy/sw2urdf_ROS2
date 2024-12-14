@@ -26,5 +26,10 @@
 
 > 注：arm_description目录为测试目标
 
+注意
+**fix_frame**选择 **base_link**
+
+**Description Topic**选择 **/robot_description**
+![alt text](assets/image.png)
 
 
