@@ -2,7 +2,7 @@
 
 ## 环境配置
 
-1. windows系统
+1. windows/Ubuntu
 2. python
 3. tk
 
