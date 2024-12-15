@@ -18,25 +18,38 @@ def unzip_and_cleanup(zip_path, target_dir):
     create_launch_folder(target_dir)
 
     # 创建 launch 文件
-    create_launch_file(target_dir + os.path.splitext(zip_file_name)[0] + "/launch/", os.path.splitext(zip_file_name)[0])
+    create_launch_file(target_dir + os.path.splitext(zip_file_name)
+                       [0] + "/launch/", os.path.splitext(zip_file_name)[0])
 
     # 创建 CMakeLists.txt 文件
-    create_cmake_file(target_dir + os.path.splitext(zip_file_name)[0], os.path.splitext(zip_file_name)[0])
+    create_cmake_file(target_dir + os.path.splitext(zip_file_name)
+                      [0], os.path.splitext(zip_file_name)[0])
 
     # 创建 package.xml 文件
-    create_xml_file(target_dir + os.path.splitext(zip_file_name)[0], os.path.splitext(zip_file_name)[0])
+    create_xml_file(target_dir + os.path.splitext(zip_file_name)
+                    [0], os.path.splitext(zip_file_name)[0])
 
+    source_file = 'insert_content.txt'
+    target_file = target_dir + \
+        os.path.splitext(zip_file_name)[0]+'/urdf/'+'arm_description.urdf'
+    line_number = 7
+
+    insert_content_at_line(source_file, target_file, line_number)
 
 # 删除不需要的文件和文件夹
+
+
 def delete_files_and_folders(target_dir):
-    launch_dir = os.path.join(target_dir + os.path.splitext(zip_file_name)[0], 'launch')
+    launch_dir = os.path.join(
+        target_dir + os.path.splitext(zip_file_name)[0], 'launch')
     if os.path.exists(launch_dir):
         shutil.rmtree(launch_dir)
         print(f"已删除文件夹：{launch_dir}")
 
     files_to_delete = ['CMakeLists.txt', 'package.xml']
     for file in files_to_delete:
-        file_path = os.path.join(target_dir + os.path.splitext(zip_file_name)[0], file)
+        file_path = os.path.join(
+            target_dir + os.path.splitext(zip_file_name)[0], file)
         if os.path.exists(file_path):
             os.remove(file_path)
             print(f"已删除文件：{file_path}")
@@ -44,7 +57,8 @@ def delete_files_and_folders(target_dir):
 
 # 创建 launch 文件夹
 def create_launch_folder(target_dir):
-    launch_dir = os.path.join(target_dir + os.path.splitext(zip_file_name)[0], 'launch')
+    launch_dir = os.path.join(
+        target_dir + os.path.splitext(zip_file_name)[0], 'launch')
     if not os.path.exists(launch_dir):
         os.makedirs(launch_dir)
         print(f"已创建 'launch' 文件夹：{launch_dir}")
@@ -190,6 +204,29 @@ def create_xml_file(xml_dir, package_name):
     with open(xml_file_path, 'w', encoding='utf-8') as file:
         file.write(xml_content)
     print(f"已创建 package.xml文件：{xml_file_path}")
+
+
+def insert_content_at_line(source_file, target_file, line_number):
+    # 读取源文件内容
+    with open(source_file, 'r', encoding='utf-8') as src:
+        source_content = src.read()
+
+    # 读取目标文件内容
+    with open(target_file, 'r', encoding='utf-8') as tgt:
+        target_lines = tgt.readlines()  # 读取目标文件的每一行
+
+    # 插入源文件内容到指定行
+    # 如果指定的行超出目标文件的行数，内容会被追加到文件末尾
+    if line_number > len(target_lines):
+        line_number = len(target_lines)
+
+    target_lines.insert(line_number - 1, source_content + '\n')
+
+    # 将修改后的内容写回目标文件
+    with open(target_file, 'w', encoding='utf-8') as tgt:
+        tgt.writelines(target_lines)
+
+    print(f"内容已成功插入到 {target_file} 的第 {line_number} 行")
 
 
 # 主程序

@@ -202,3 +202,32 @@ ament_package()
         print(f"成功将 package.xml 文件保存为：{xml_file_path}")
     except Exception as e:
         print(f"写入文件时出错：{e}")
+
+    def insert_content_at_line(source_file, target_file, line_number):
+        # 读取源文件内容
+        with open(source_file, 'r', encoding='utf-8') as src:
+            source_content = src.read()
+
+        # 读取目标文件内容
+        with open(target_file, 'r', encoding='utf-8') as tgt:
+            target_lines = tgt.readlines()  # 读取目标文件的每一行
+
+        # 插入源文件内容到指定行
+        # 如果指定的行超出目标文件的行数，内容会被追加到文件末尾
+        if line_number > len(target_lines):
+            line_number = len(target_lines)
+
+        target_lines.insert(line_number - 1, source_content + '\n')
+
+        # 将修改后的内容写回目标文件
+        with open(target_file, 'w', encoding='utf-8') as tgt:
+            tgt.writelines(target_lines)
+
+        print(f"内容已成功插入到 {target_file} 的第 {line_number} 行")
+
+
+    source_file = 'insert_content.txt'
+    target_file = target_directory+'/urdf/'+'arm_description.urdf'
+    line_number = 7
+
+    insert_content_at_line(source_file, target_file, line_number)
