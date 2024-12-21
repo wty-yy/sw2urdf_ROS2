@@ -16,7 +16,7 @@ if not target_directory:
 else:
     print(f"Selected directory: {target_directory}")
 
-    # 3. Delete the 'launch' folder
+    # 3. Delete the 'launch' folder if it exists
     launch_folder = os.path.join(target_directory, 'launch')
     if os.path.exists(launch_folder) and os.path.isdir(launch_folder):
         try:
@@ -27,7 +27,7 @@ else:
     else:
         print("'launch' folder does not exist.")
 
-    # 4. Delete 'CMakeLists.txt' file
+    # 4. Delete 'CMakeLists.txt' file if it exists
     cmake_file = os.path.join(target_directory, 'CMakeLists.txt')
     if os.path.exists(cmake_file) and os.path.isfile(cmake_file):
         try:
@@ -38,7 +38,7 @@ else:
     else:
         print("'CMakeLists.txt' file does not exist.")
 
-    # 5. Delete 'package.xml' file
+    # 5. Delete 'package.xml' file if it exists
     package_file = os.path.join(target_directory, 'package.xml')
     if os.path.exists(package_file) and os.path.isfile(package_file):
         try:
@@ -233,20 +233,20 @@ ament_package()
 
     insert_content_at_line(source_file, target_file, line_number)
 
-    # 文件路径
+    # File path
     file_path = target_file
 
-    # 要替换的内容
+    # Content to replace
     new_first_line = '''<?xml version="1.0" ?>'''
 
-    # 打开文件进行读取
+    # Open the file for reading
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
 
     if lines:
-        lines[0] = new_first_line + '\n'  # 确保加入换行符
+        lines[0] = new_first_line + '\n'  # Ensure newline is added
 
-    # 将修改后的内容写回文件
+    # Write the modified content back to the file
     with open(file_path, 'w', encoding='utf-8') as file:
         file.writelines(lines)
 
@@ -260,24 +260,24 @@ ament_package()
 
     insert_content_at_line(source_file, target_file, line_number)
 
-    # 定义文件和目标目录路径
+    # Define file and target directory paths
     source_sdf_file = target_directory + '/urdf/' + "model.sdf"
     target_sdf_directory = os.path.join(os.path.expanduser(
         "~"), ".gazebo", "models", f"{os.path.basename(target_directory)}")
 
-    # 判断目标目录是否存在
+    # Check if target directory exists
     if not os.path.exists(target_sdf_directory):
-        # 如果目录不存在，创建目录
+        # If the directory does not exist, create it
         os.makedirs(target_sdf_directory)
-        print(f"目录 {target_sdf_directory} 已创建。")
+        print(f"Directory {target_sdf_directory} created.")
     else:
-        print(f"目录 {target_sdf_directory} 已存在。")
+        print(f"Directory {target_sdf_directory} already exists.")
 
-    # 执行文件复制操作
+    # Perform file copy operation
     target_path = os.path.join(
         target_sdf_directory, os.path.basename(source_sdf_file))
     shutil.copy(source_sdf_file, target_sdf_directory)
-    print(f"文件 {source_sdf_file} 已复制到 {target_sdf_directory}。")
+    print(f"File {source_sdf_file} successfully copied to {target_sdf_directory}.")
 
     model_config_content = f"""<?xml version="1.0"?>
 
@@ -311,33 +311,33 @@ ament_package()
     destination_directory = target_sdf_directory+"/meshes"
 
     if os.path.exists(destination_directory):
-        print(f"目标目录 {destination_directory} 已经存在！")
+        print(f"Target directory {destination_directory} already exists!")
     else:
-
         shutil.copytree(source_directory, destination_directory)
-        print(f"目录 {source_directory} 已成功复制到 {destination_directory}")
+        print(f"Directory {source_directory} successfully copied to {destination_directory}")
 
     source_directory = target_directory+"/textures"
     destination_directory = target_sdf_directory+"/materials/textures"
 
     if os.path.exists(destination_directory):
-        print(f"目标目录 {destination_directory} 已经存在！")
+        print(f"Target directory {destination_directory} already exists!")
     else:
         shutil.copytree(source_directory, destination_directory)
-        print(f"目录 {source_directory} 已成功复制到 {destination_directory}")
+        print(f"Directory {source_directory} successfully copied to {destination_directory}")
 
     file_path = os.path.join(target_directory, "urdf", "model.sdf")
 
     try:
-        os.remove(file_path)  # 删除文件
-        print(f"文件 {file_path} 已成功删除")
+        os.remove(file_path)  # Delete file
+        print(f"File {file_path} successfully deleted.")
     except FileNotFoundError:
-        print(f"文件 {file_path} 不存在")
+        print(f"File {file_path} does not exist.")
     except PermissionError:
-        print(f"没有权限删除文件 {file_path}")
+        print(f"No permission to delete file {file_path}.")
     except Exception as e:
-        print(f"删除文件时发生错误: {e}")
+        print(f"Error deleting file: {e}")
 
+    # Gazebo launch file content
     gazebo_launch_content = f"""import launch
 import launch_ros
 from ament_index_python.packages import get_package_share_directory
@@ -346,13 +346,13 @@ import os
 
 
 def generate_launch_description():
-    # 获取默认路径
+    # Get default path
     robot_name_in_model = "{package_name}"
     urdf_tutorial_path = get_package_share_directory('{package_name}')
     default_model_path = os.path.join(
         urdf_tutorial_path, 'urdf', '{package_name}.urdf')
 
-    # 读取 URDF 文件内容
+    # Read URDF file content
     with open(default_model_path, 'r') as urdf_file:
         robot_description = urdf_file.read()
 
@@ -362,13 +362,13 @@ def generate_launch_description():
         parameters=[{{'robot_description': robot_description}}]
     )
 
-    # 通过 IncludeLaunchDescription 包含另外一个 launch 文件
+    # Include another launch file for Gazebo
     launch_gazebo = launch.actions.IncludeLaunchDescription(
         PythonLaunchDescriptionSource([get_package_share_directory(
             'gazebo_ros'), '/launch', '/gazebo.launch.py']),
     )
 
-    # 请求 Gazebo 加载机器人
+    # Request Gazebo to spawn the robot
     spawn_entity_node = launch_ros.actions.Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
