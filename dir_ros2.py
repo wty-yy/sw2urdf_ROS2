@@ -4,6 +4,8 @@ import tkinter as tk
 from tkinter import filedialog
 import subprocess
 
+PATH_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 # 1. Create tkinter root window
 root = tk.Tk()
 root.withdraw()  # Hide the main window
@@ -15,6 +17,15 @@ if not target_directory:
     print("No valid directory selected.")
 else:
     print(f"Selected directory: {target_directory}")
+
+    path_textures_folder = os.path.join(target_directory, "textures")
+    if not os.path.exists(path_textures_folder):
+        os.makedirs(path_textures_folder)
+    
+    path_backup_folder = target_directory + '_backup'
+    if os.path.exists(path_backup_folder):
+        shutil.rmtree(path_backup_folder)
+    shutil.copytree(target_directory, path_backup_folder)
 
     # 3. Delete the 'launch' folder if it exists
     launch_folder = os.path.join(target_directory, 'launch')
@@ -226,7 +237,7 @@ ament_package()
         print(
             f"Content successfully inserted into {target_file} at line {line_number}")
 
-    source_file = 'insert_urdf.txt'
+    source_file = os.path.join(PATH_ROOT, 'insert_urdf.txt')
     target_file = target_directory + '/urdf/' + \
         os.path.basename(target_directory)+".urdf"
     line_number = 7
@@ -254,7 +265,7 @@ ament_package()
     command = f"gz sdf -p {target_file} > {urdf_folder}/model.sdf"
     subprocess.run(command, shell=True, check=True)
 
-    source_file = 'insert_sdf.txt'
+    source_file = os.path.join(PATH_ROOT, 'insert_sdf.txt')
     target_file = target_directory + '/urdf/' + "model.sdf"
     line_number = 1
 
