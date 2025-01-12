@@ -41,6 +41,7 @@
     ```
 4. 将转换完毕的ROS2的URDF项目文件夹`urdf_proj`复制到ROS2的工作路径下（例如`/ros2_ws/src`），执行
 ```bash
+cp -r path/to/urdf_proj /ros2_ws/src
 cd /ros2_ws
 colcon build --symlink-install
 source ./install/setup.sh
